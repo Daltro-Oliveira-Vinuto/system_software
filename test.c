@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 
+#define NAME_SIZE 255
+
 typedef struct person {
   int code;
   char* name;
@@ -47,7 +49,7 @@ person_t *create_person_from_stdin(void) {
 	person_t *person;
 
 	person = (person_t*) malloc(sizeof(person_t*)*1);
-	person->name_size = 100;
+	person->name_size = NAME_SIZE;
 	person->name = (char*)malloc(sizeof(int)*(person->name_size+1));
 	person->print = print_person;
 
