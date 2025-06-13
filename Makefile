@@ -1,8 +1,8 @@
-production: clear_screen preprocess compile assemble link 
-deployment: clear_screen preprocess compile_with_gdb assemble link
+production: clear_screen preprocess compile assemble link static_check
+deployment: clear_screen preprocess compile_with_gdb assemble link static_check
 asm: clear_screen assemble_with_nasm link_with_ld 
-deploy: clear_screen preprocess_compile_assemble_and_link
-develop: clear_screen preprocess_compile_assemble_and_link_with_gdb
+deploy: clear_screen preprocess_compile_assemble_and_link static_check
+develop: clear_screen preprocess_compile_assemble_and_link_with_gdb static_check
 debug: clear_screen debug_code
 check: clear_screen static_check dynamic_check
 run: clear_screen dynamic_check
