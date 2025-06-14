@@ -8,8 +8,8 @@ check: clear_screen static_check dynamic_check
 run: clear_screen dynamic_check
 
 COMPILER = gcc # gcc or g++
-SRC = hello
-TYPE = .asm # .c or .cpp or .asm
+SRC = test
+TYPE = .c # .c or .cpp or .asm
 FLAGS = -Wall -m32 -masm=intel
 FLAGS_WITH_GDB = $(FLAGS) -g
 ELF = $(SRC).exe
