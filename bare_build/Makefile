@@ -12,7 +12,7 @@ COMPILER := gcc # gcc or g++
 PROJECT := game
 SRC := ../src/hello# or src/*.c or src/*.cpp
 TYPE := .c # .c or .cpp or .asm or nothing
-FLAGS := -Wall -masm=intel -m64 # -std=c++17 
+FLAGS := -Wall -masm=intel -m64 # -std=c++17 or -m32 
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := $(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
