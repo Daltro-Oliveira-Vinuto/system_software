@@ -15,54 +15,64 @@ typedef struct person {
   void (*print)(struct person*);
 } person_t;
 
+
 void print_person(person_t *person) {
     fprintf(stdout, "========== print person ============\n");
-    fprintf(stdout, "Person code: %d\n", person->code);
-    fprintf(stdout, "Person name: %s\n"  person->name);
-    fprintf(stdout, "Person net worth: %.1f\n", person->net_worth);
-    fprintf(stdout, "Person salary: %.1f\n", person->salary);
-    fprintf(stdout, "========== end print person ============\n\n");
+    printf("Person code: %d\n", person->code);
+    printf("Person name: %s\n",  person->name);
+    printf("Person net worth: %.1f\n", person->net_worth);
+    printf("Person salary: %.1f\n", person->salary);
+    printf("========== end print person ============\n\n");
 }
 
 void print_name(person_t *person) {
-    fprintf(stdout, "Person name: %s\n\n", person->name);
+    printf("Person name: %s\n\n", person->name);
 }
 
 
+
 person_t* create_person(int code, char* name, int name_size, double net_worth,
-                        void (*print_function)(person_t*)) {
+                        void (*print_function)(person_t*)
+                        ) {
     person_t *person;
 
     person = (person_t*) malloc(sizeof(person_t)*1);
+    person->name_size = name_size;
     person->name = (char*) malloc(sizeof(char)*(name_size+1));
     snprintf(person->name, sizeof(char)*person->name_size, "%s", name);
 
     person->code = code;
-    person->name_size = name_size;
     person->net_worth = net_worth;
 
     person->print = print_function;
+    person->salary = net_worth;
 
     return person;
 }
+
 
 person_t *create_person_from_stdin(void) {
     person_t *person;
 
-    person = (person_t*) malloc(sizeof(person_t*)*1);
+    // this would result in "core dumped":
+    // person = (person_t*) malloc(sizeof(person_t*)*1);
+    person = (person_t*) malloc(sizeof(person_t)*1);
     person->name_size = NAME_SIZE;
     person->name = (char*)malloc(sizeof(int)*(person->name_size+1));
     person->print = print_person;
 
-    fprintf(stdout, "Type the person name: ");
+    printf("Type the person name: ");
     fscanf(stdin, "%s", (person->name));
-    fprintf(stdout, "Type the person code: ");
-    fscanf(stdin, "%d", &(person->code));
-    fprintf(stdout, "Type the person net worth: ");
-    fscanf(stdin, "%lf", &(person->net_worth));
+    printf("Type the person code: ");
+    scanf("%d", &(person->code));
+    printf("Type the person net worth: ");
+    scanf("%lf", &(person->net_worth));
+
+    person->salary = person->net_worth;
 
     return person;
 }
+
 
 void delete_person(person_t* person) {
     free(person->name);
@@ -84,6 +94,5 @@ int main() {
     person1->print(person1);
 
     delete_person(person1);
-
     return 0;
 }

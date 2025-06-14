@@ -13,7 +13,8 @@ FLAGS = -Wall -m32 -masm=intel
 FLAGS_WITH_GDB = $(FLAGS) -g
 ELF = test.exe
 VALGRIND_OUT = valgrind.txt
-VALGRIND_FLAGS = --leak-check=full --log-file=$(VALGRIND_OUT) # --track-origins=yes --show-leak-kinds=all
+VALGRIND_FLAGS = --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
+
 
 
 # compile with gcc ---------------------------------------------------------
