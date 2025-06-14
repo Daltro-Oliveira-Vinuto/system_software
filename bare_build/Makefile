@@ -11,14 +11,14 @@ COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
 PROJECT := game
 SRC := ../src/hello# or src/*.c or src/*.cpp
-TYPE := .asm # .c or .cpp or .asm or nothing
+TYPE := .c # .c or .cpp or .asm or nothing
 FLAGS := -Wall -masm=intel -m64 # -std=c++17 
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := $(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
-INCLUDE := -I
-LINK := -l
+INCLUDE := -I # -I/usr/include/SDL2 -Iinclude/
+LINK := -l # -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 
 
 # compile with gcc ---------------------------------------------------------
