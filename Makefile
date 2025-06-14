@@ -8,10 +8,11 @@ check: clear_screen static_check dynamic_check
 run: clear_screen dynamic_check
 
 COMPILER = gcc # or g++
-SRC = test.c # or test.cpp
+SRC = hello
+TYPE = .asm
 FLAGS = -Wall -m32 -masm=intel
 FLAGS_WITH_GDB = $(FLAGS) -g
-ELF = test.exe
+ELF = $(SRC).exe
 VALGRIND_OUT = valgrind.txt
 VALGRIND_FLAGS = --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 
@@ -26,16 +27,16 @@ list_files:
 	$(info files in the directory:)
 
 preprocess:
-	$(COMPILER) $(SRC) -E > $(SRC).e
+	$(COMPILER) $(SRC)$(TYPE) -E > $(SRC).e
 	$(info file preprocessed.) 
 
 #  sudo apt install gcc-multilib 
 compile:
-	$(COMPILER) $(FLAGS) $(SRC) -S 
+	$(COMPILER) $(FLAGS) $(SRC)$(TYPE) -S > $(SRC).s
 	$(info file compiled..)
 
 compile_with_gdb:
-	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC) -S 
+	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC)$(TYPE) -S  > $(SRC).s
 	$(info file compiled..)
 
 
@@ -48,11 +49,11 @@ link:
 	$(info file linked!)
 
 preprocess_compile_assemble_and_link:
-	$(COMPILER) $(FLAGS) $(SRC).c -o $(ELF)
+	$(COMPILER) $(FLAGS) $(SRC)$(TYPE) -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF)) 
 
 preprocess_compile_assemble_and_link_with_gdb:
-	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC) -o $(ELF)
+	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC)$(TYPE) -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF) with gdb) 
 
 
@@ -63,7 +64,8 @@ preprocess_compile_assemble_and_link_with_gdb:
 
 # sudo apt install nasm 
 assemble_with_nasm:
-	nasm -f elf $(SRC).asm -o $(SRC).o
+	# the $(TYPE) MUST be .asm
+	nasm -f elf $(SRC)$(TYPE) -o $(SRC).o
 	$(info assembly file assembled with nasm)
 
 link_with_ld:
@@ -83,7 +85,7 @@ debug_code:
 # sudo apt install pipx
 # pipx install cpplint
 static_check:
-	cpplint $(SRC)
+	cpplint $(SRC)$(TYPE)
 
 # sudo apt install valgrind
 # sudo apt install  libc6-dbg:i386
