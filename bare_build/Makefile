@@ -11,7 +11,7 @@ COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
 PROJECT := game
 SRC := ../src/hello# or src/*.c or src/*.cpp
-TYPE := .c # .c or .cpp or .asm or nothing
+TYPE := .asm # .c or .cpp or .asm or nothing
 FLAGS := -Wall -masm=intel -m64 # -std=c++17 
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := $(PROJECT).elf
@@ -67,16 +67,20 @@ preprocess_compile_assemble_and_link_with_gdb:
 
 # sudo apt install nasm
 # the $(TYPE) MUST be .asm
-# nasm -f elf $(SRC)$(TYPE) -o $(SRC).o # for -m32
+
 # for -m64 use the following 
+# nasm -f elf64 $(SRC)$(TYPE) -o $(SRC).o
 assemble_with_nasm:
-	nasm -f elf64 $(SRC)$(TYPE) -o $(SRC).o
+	# for -m32 use the following:
+	nasm -f elf $(SRC)$(TYPE) -o $(SRC).o 
 	$(info assembly file assembled with nasm)
 
-# ld -m elf_i386 $(SRC).o -o $(ELF) # for -m32
+
 # for -m64 use the following:
+# ld $(SRC).o -o $(ELF) 
 link_with_ld:
-	ld $(SRC).o -o $(ELF) 
+	# for -m32 use the following
+	ld -m elf_i386 $(SRC).o -o $(ELF) 
 	$(info objects file linked with ld)
 
 # end  compilation with nasm and ld --------------------------------------
