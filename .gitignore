@@ -2,4 +2,5 @@
 *.o
 *.e
 *.exe
+*.elf
 *.txt

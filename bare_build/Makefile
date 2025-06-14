@@ -7,17 +7,18 @@ debug: clear_screen debug_code
 check: clear_screen static_check dynamic_check
 run: clear_screen dynamic_check
 
-COMPILER = gcc # gcc or g++
+COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
-SRC = ../src/hello# or src/*.c or src/*.cpp
-TYPE = .asm # .c or .cpp or .asm or nothing
-FLAGS = -Wall -masm=intel -m64 # -std=c++17 
-FLAGS_WITH_GDB = $(FLAGS) -g
-ELF = main.exe # or $(SRC).exe
-VALGRIND_OUT = valgrind.txt
-VALGRIND_FLAGS = --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
-INCLUDE_PATHS = ../include/*
-LINKER_FLAGS = 
+PROJECT := game
+SRC := ../src/hello# or src/*.c or src/*.cpp
+TYPE := .c # .c or .cpp or .asm or nothing
+FLAGS := -Wall -masm=intel -m64 # -std=c++17 
+FLAGS_WITH_GDB := $(FLAGS) -g
+ELF := $(PROJECT).elf
+VALGRIND_OUT := valgrind.txt
+VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
+INCLUDE := -I
+LINK := -l
 
 
 # compile with gcc ---------------------------------------------------------
@@ -51,11 +52,11 @@ link:
 	$(info file linked!)
 
 preprocess_compile_assemble_and_link:
-	$(COMPILER) $(FLAGS) $(SRC)$(TYPE) -o $(ELF)
+	$(COMPILER) $(FLAGS) $(INCLUDE) $(LINK) $(SRC)$(TYPE) -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF)) 
 
 preprocess_compile_assemble_and_link_with_gdb:
-	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC)$(TYPE) -o $(ELF)
+	$(COMPILER) $(FLAGS_WITH_GDB) $(INCLUDE) $(LINK) $(SRC)$(TYPE) -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF) with gdb) 
 
 
