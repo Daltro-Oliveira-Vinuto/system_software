@@ -4,3 +4,6 @@
 *.exe
 *.elf
 *.txt
+build/
+CMakeFiles/
+*.cmake

@@ -5,7 +5,7 @@ deploy: clear_screen preprocess_compile_assemble_and_link static_check
 develop: clear_screen preprocess_compile_assemble_and_link_with_gdb static_check
 debug: clear_screen debug_code
 check: clear_screen static_check dynamic_check
-run: clear_screen dynamic_check
+load: clear_screen dynamic_check
 
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
