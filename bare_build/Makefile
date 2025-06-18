@@ -12,9 +12,9 @@ COMPILER := gcc # gcc or g++
 PROJECT := game
 SRC := ../src/hello# or src/*.c or src/*.cpp
 TYPE := .c # .c or .cpp or .asm or nothing
-FLAGS := -Wall -masm=intel -m64 # -std=c++17 or -m32 
+FLAGS :=  -Wall -masm=intel -m64 # -std=c++17 or -m32 -v
 FLAGS_WITH_GDB := $(FLAGS) -g
-ELF := $(PROJECT).elf
+ELF := load_module_$(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 INCLUDE := -I # -I/usr/include/SDL2 -Iinclude/
