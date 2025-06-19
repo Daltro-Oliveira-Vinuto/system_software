@@ -10,15 +10,15 @@ load: clear_screen dynamic_check
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
 PROJECT := game
-SRC := ../src/hello# or src/*.c or src/*.cpp
+SRC := ../src/main# or src/*.c or src/*.cpp
 TYPE := .c # .c or .cpp or .asm or nothing
-FLAGS :=  -Wall -masm=intel -m64 # -std=c++17 or -m32 -v
+FLAGS :=  -Wall -masm=intel -m64# -std=c++17 or -m32 -v
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := load_module_$(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
-INCLUDE := -I # -I/usr/include/SDL2 -Iinclude/
-LINK := -l # -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
+INCLUDE := -I./../include/  # -I/usr/include/SDL2 -Iinclude/
+LINK := -L./../lib/ -ltest# -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 
 
 # compile with gcc ---------------------------------------------------------
@@ -35,28 +35,27 @@ preprocess:
 
 #  sudo apt install gcc-multilib 
 compile:
-	$(COMPILER) $(FLAGS) $(SRC)$(TYPE) -S 
+	$(COMPILER) $(SRC)$(TYPE) $(FLAGS)  -S 
 	$(info file compiled..)
 
 compile_with_gdb:
-	$(COMPILER) $(FLAGS_WITH_GDB) $(SRC)$(TYPE) -S  
+	$(COMPILER) $(SRC)$(TYPE) $(FLAGS_WITH_GDB)  -S  
 	$(info file compiled..)
 
-
 assemble:
-	$(COMPILER) $(FLAGS) *.s -c 
+	$(COMPILER) *.s $(FLAGS) -c 
 	$(info file avengers assembled...)
 
 link:
-	$(COMPILER) $(FLAGS) *.o -o $(ELF)
+	$(COMPILER) *.o $(FLAGS) $(INCLUDE) $(LINK) -o $(ELF)
 	$(info file linked!)
 
 preprocess_compile_assemble_and_link:
-	$(COMPILER) $(FLAGS) $(INCLUDE) $(LINK) $(SRC)$(TYPE) -o $(ELF)
+	$(COMPILER) $(SRC)$(TYPE) $(FLAGS) $(INCLUDE) $(LINK)  -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF)) 
 
 preprocess_compile_assemble_and_link_with_gdb:
-	$(COMPILER) $(FLAGS_WITH_GDB) $(INCLUDE) $(LINK) $(SRC)$(TYPE) -o $(ELF)
+	$(COMPILER) $(SRC)$(TYPE) $(FLAGS_WITH_GDB) $(INCLUDE) $(LINK)  -o $(ELF)
 	$(info file $(SRC).c preprocessed, compiled, assembled and linked to $(ELF)(ELF) with gdb) 
 
 
@@ -72,7 +71,7 @@ preprocess_compile_assemble_and_link_with_gdb:
 # nasm -f elf64 $(SRC)$(TYPE) -o $(SRC).o
 assemble_with_nasm:
 	# for -m32 use the following:
-	nasm -f elf $(SRC)$(TYPE) -o $(SRC).o 
+	nasm $(SRC)$(TYPE) -f elf  -o $(SRC).o 
 	$(info assembly file assembled with nasm)
 
 
@@ -80,7 +79,7 @@ assemble_with_nasm:
 # ld $(SRC).o -o $(ELF) 
 link_with_ld:
 	# for -m32 use the following
-	ld -m elf_i386 $(SRC).o -o $(ELF) 
+	ld $(SRC).o -m elf_i386 -o $(ELF) 
 	$(info objects file linked with ld)
 
 # end  compilation with nasm and ld --------------------------------------
