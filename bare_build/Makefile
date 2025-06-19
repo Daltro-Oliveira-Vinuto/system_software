@@ -10,7 +10,8 @@ load: clear_screen dynamic_check
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
 PROJECT := game
-SRC := ../src/main# or src/*.c or src/*.cpp
+SRC_FILE := main
+SRC := ../src/$(SRC_FILE)# or src/*.c or src/*.cpp
 TYPE := .c # .c or .cpp or .asm or nothing
 FLAGS :=  -Wall -masm=intel -m32# -std=c++17 or -m32 -v -m64
 FLAGS_WITH_GDB := $(FLAGS) -g
@@ -18,7 +19,7 @@ ELF := load_module_$(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 INCLUDE := -I./../include/  # -I/usr/include/SDL2 -Iinclude/
-LINK := -L./../lib/ -ltest# -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
+LINK := -L./../lib/ #-ltest -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 
 
 # compile with gcc ---------------------------------------------------------
@@ -102,4 +103,12 @@ static_check:
 dynamic_check:
 	valgrind $(VALGRIND_FLAGS) ./$(ELF)
 
-#end of check_code section  ----------------------------------------------
+# end of check_code section  ----------------------------------------------
+
+# show object code headers(symbol table, external symbol table, global symbol table) -----
+objdump:
+	clear
+	objdump -x -S --disassembler-options=intel-mnemonic  $(SRC_FILE).o
+
+
+# end of object code information -------------------------------------------
