@@ -12,18 +12,18 @@ elf: clear_screen elf_objdump_x elf_objdump_S
 
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
-PROJECT := game
-SRC_FILE := main
+PROJECT := hello
+SRC_FILE := hello#main
 SRC := ../src/$(SRC_FILE)# or src/*.c or src/*.cpp
-TYPE := .c # .c or .cpp or .asm or nothing
-FLAGS :=  -Wall -masm=intel -m64# -std=c++17 or -m32 -v -m64
+TYPE := .asm # .c or .cpp or .asm or nothing
+FLAGS :=  -Wall -masm=intel -m32# -std=c++17 or -m32 -v -m64
 FLAGS_WITH_GDB := $(FLAGS) -g
-ELF := load_module_$(PROJECT).elf
+ELF := $(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 INCLUDE := -I./../include/  # -I/usr/include/SDL2 -Iinclude/
 LINK := -L./../lib/ #-ltest -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
-FILE_TO_DUMP := $(SRC_FILE)
+FILE_TO_DUMP := $(SRC)# $(SRC_FILE)
 
 # compile with gcc ---------------------------------------------------------
 clear_screen:
@@ -75,15 +75,15 @@ preprocess_compile_assemble_and_link_with_gdb:
 # nasm -f elf64 $(SRC)$(TYPE) -o $(SRC).o
 assemble_with_nasm:
 	# for -m32 use the following:
-	nasm $(SRC)$(TYPE) -f elf  -o $(SRC).o 
+	nasm $(SRC)$(TYPE) -g -f elf -o $(SRC).o  
 	$(info assembly file assembled with nasm)
 
 
 # for -m64 use the following:
 # ld $(SRC).o -o $(ELF) 
 link_with_ld:
-	# for -m32 use the following
-	ld $(SRC).o -m elf_i386 -o $(ELF) 
+	# for -m32 use the following:
+	ld $(SRC).o -m elf_i386 -o $(ELF)
 	$(info objects file linked with ld)
 
 # end  compilation with nasm and ld --------------------------------------
