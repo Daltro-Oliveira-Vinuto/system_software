@@ -3,6 +3,7 @@
 *.e
 *.exe
 *.elf
+*.obj
 src/*.txt
 build/
 CMakeFiles/

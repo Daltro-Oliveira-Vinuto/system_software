@@ -6,6 +6,9 @@ develop: clear_screen preprocess_compile_assemble_and_link_with_gdb static_check
 debug: clear_screen debug_code
 check: clear_screen static_check dynamic_check
 load: clear_screen dynamic_check
+obj: clear_screen objdump_x objdump_S
+elf: clear_screen elf_objdump_x elf_objdump_S
+
 
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
@@ -13,14 +16,14 @@ PROJECT := game
 SRC_FILE := main
 SRC := ../src/$(SRC_FILE)# or src/*.c or src/*.cpp
 TYPE := .c # .c or .cpp or .asm or nothing
-FLAGS :=  -Wall -masm=intel -m32# -std=c++17 or -m32 -v -m64
+FLAGS :=  -Wall -masm=intel -m64# -std=c++17 or -m32 -v -m64
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := load_module_$(PROJECT).elf
 VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 INCLUDE := -I./../include/  # -I/usr/include/SDL2 -Iinclude/
 LINK := -L./../lib/ #-ltest -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
-
+FILE_TO_DUMP := $(SRC_FILE)
 
 # compile with gcc ---------------------------------------------------------
 clear_screen:
@@ -106,9 +109,16 @@ dynamic_check:
 # end of check_code section  ----------------------------------------------
 
 # show object code headers(symbol table, external symbol table, global symbol table) -----
-objdump:
-	clear
-	objdump -x -S --disassembler-options=intel-mnemonic  $(SRC_FILE).o
+objdump_x:
+	objdump -x --disassembler-options=intel-mnemonic  $(FILE_TO_DUMP).o > $(FILE_TO_DUMP).obj
 
+objdump_S:
+	objdump -S --disassembler-options=intel-mnemonic  $(FILE_TO_DUMP).o >> $(FILE_TO_DUMP).obj
+
+elf_objdump_x:
+	objdump -x --disassembler-options=intel-mnemonic  $(ELF) > $(ELF).obj
+
+elf_objdump_S:
+	objdump -S --disassembler-options=intel-mnemonic  $(ELF) >> $(ELF).obj
 
 # end of object code information -------------------------------------------
