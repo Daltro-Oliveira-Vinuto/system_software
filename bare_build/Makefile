@@ -3,7 +3,8 @@ development: clear_screen preprocess compile_with_gdb assemble link static_check
 asm: clear_screen assemble_with_nasm link_with_ld 
 deploy: clear_screen preprocess_compile_assemble_and_link static_check
 develop: clear_screen preprocess_compile_assemble_and_link_with_gdb static_check
-debug: clear_screen debug_code
+debug_c: clear_screen debug_c_code
+debug_asm: clear_screen debug_asm_code
 check: clear_screen static_check dynamic_check
 load: clear_screen dynamic_check
 obj: clear_screen objdump_x objdump_S
@@ -89,8 +90,11 @@ link_with_ld:
 # end  compilation with nasm and ld --------------------------------------
 
 # start of debug code section ---------------------------------
-debug_code:
-	gdb $(ELF) -ex "b main" -ex "set disassembly-flavor intel" -ex "layout split" 
+debug_c_code:
+	gdb $(ELF) -ex "set disassembly-flavor intel" -ex "layout split" -ex "b main" -ex "r" 
+
+debug_asm_code:
+	gdb $(ELF) -ex "set disassembly-flavor intel" -ex "layout asm"  -ex "layout regs" -ex "b _start" -ex "r" 
 
 # end of debug code section ------------------------------------
 

@@ -6,13 +6,13 @@ global _start
 
 section .data
 
-value db 9
+value db 0x08
 message db "Hello Cyber Punk World!",0xd, 0xa
 new_line db 0xa
 
 section .bss
 
-index resb 1 
+index resd 1 
 ascii_value resb 1
 
 section .text
@@ -23,6 +23,29 @@ _start:
 	mov eax, value 
 	mov bl, BYTE [eax] 
 	lea ecx, DWORD [eax]
+
+	push ebp
+	mov ebp, esp
+
+	mov eax, 8
+	mov ebx, 7
+	mov ecx, 6
+	mov edx, 5
+
+	sub esp, 1
+	mov byte [esp], bl
+
+	sub esp, 1
+	mov byte [esp], bl 
+
+	sub esp, 1
+	mov byte [esp], bl 
+	
+	sub esp, 1
+	mov byte [esp], bl 
+
+	add esp, 4 
+	pop ebp
 
 	; print the message in the stdout
 	mov eax, 4
