@@ -1,6 +1,7 @@
 deployment: clear_screen preprocess compile assemble link static_check
 development: clear_screen preprocess compile_with_gdb assemble link static_check
-asm: clear_screen assemble_with_nasm link_with_ld 
+x86: clear_screen assemble_with_nasm_x86 link_with_ld_x86
+x64: clear_screen assemble_with_nasm_x64 link_with_ld_x64
 deploy: clear_screen preprocess_compile_assemble_and_link static_check
 develop: clear_screen preprocess_compile_assemble_and_link_with_gdb static_check
 debug_c: clear_screen debug_c_code
@@ -14,9 +15,9 @@ elf: clear_screen elf_objdump_x elf_objdump_S
 COMPILER := gcc # gcc or g++
 # only one file must had a main function(_start symbol)
 PROJECT := hello
-SRC_FILE := hello#main
-SRC := ../src/$(SRC_FILE)# or src/*.c or src/*.cpp
+SRC_FILE := hellox64#main
 TYPE := .asm # .c or .cpp or .asm or nothing
+SRC := ../src/$(SRC_FILE)# or src/*.c or src/*.cpp
 FLAGS :=  -Wall -masm=intel -m32# -std=c++17 or -m32 -v -m64
 FLAGS_WITH_GDB := $(FLAGS) -g
 ELF := $(PROJECT).elf
@@ -24,7 +25,7 @@ VALGRIND_OUT := valgrind.txt
 VALGRIND_FLAGS := --leak-check=full # --track-origins=yes --show-leak-kinds=all # --log-file=$(VALGRIND_OUT) 
 INCLUDE := -I./../include/  # -I/usr/include/SDL2 -Iinclude/
 LINK := -L./../lib/ #-ltest -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
-FILE_TO_DUMP := $(SRC)# $(SRC_FILE)
+FILE_TO_DUMP := $(SRC_FILE)# $(SRC_FILE)
 
 # compile with gcc ---------------------------------------------------------
 clear_screen:
@@ -71,21 +72,25 @@ preprocess_compile_assemble_and_link_with_gdb:
 
 # sudo apt install nasm
 # the $(TYPE) MUST be .asm
-
-# for -m64 use the following 
-# nasm -f elf64 $(SRC)$(TYPE) -o $(SRC).o
-assemble_with_nasm:
-	# for -m32 use the following:
-	nasm $(SRC)$(TYPE) -g -f elf -o $(SRC).o  
+assemble_with_nasm_x86:
+	nasm $(SRC)$(TYPE) -g -f elf32 -o $(SRC).o  
 	$(info assembly file assembled with nasm)
 
 
-# for -m64 use the following:
-# ld $(SRC).o -o $(ELF) 
-link_with_ld:
-	# for -m32 use the following:
+link_with_ld_x86:
 	ld $(SRC).o -m elf_i386 -o $(ELF)
 	$(info objects file linked with ld)
+
+
+assemble_with_nasm_x64:
+	nasm $(SRC)$(TYPE) -g -f elf64 -o $(SRC).o  
+	$(info assembly file assembled with nasm)
+
+
+link_with_ld_x64:
+	ld $(SRC).o -o $(ELF)
+	$(info objects file linked with ld)
+
 
 # end  compilation with nasm and ld --------------------------------------
 
@@ -114,10 +119,10 @@ dynamic_check:
 
 # show object code headers(symbol table, external symbol table, global symbol table) -----
 objdump_x:
-	objdump -x --disassembler-options=intel-mnemonic  $(FILE_TO_DUMP).o > $(FILE_TO_DUMP).obj
+	objdump -x --disassembler-options=intel-mnemonic  $(SRC).o > $(SRC_FILE).obj
 
 objdump_S:
-	objdump -S --disassembler-options=intel-mnemonic  $(FILE_TO_DUMP).o >> $(FILE_TO_DUMP).obj
+	objdump -S --disassembler-options=intel-mnemonic  $(SRC).o >> $(SRC_FILE).obj
 
 elf_objdump_x:
 	objdump -x --disassembler-options=intel-mnemonic  $(ELF) > $(ELF).obj
